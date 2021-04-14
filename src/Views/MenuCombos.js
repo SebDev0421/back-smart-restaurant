@@ -1,7 +1,7 @@
 import React from 'react';
 import Foodinfo from '../Components/Foodinf'
 import Back from '../Icons/back.png'
-import './MenuFood.css'
+import './MenuCombos.css'
 
 const back = ()=>{
 
@@ -12,9 +12,9 @@ const back = ()=>{
 const MenuFood = (props)=>{
     return(
         <div id = "container-menu">
-            <div id = "Header-menu">
+            <div id = "Header-menu-combo">
                 <div id = "alphaAdd">
-                <h1>Elije tu plato</h1>
+                <h1>Elije tu combo</h1>
                 </div>
                 <img src={Back}
                      onClick = {()=>{

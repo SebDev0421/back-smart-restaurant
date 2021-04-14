@@ -1,0 +1,162 @@
+#container-payment{
+    position: fixed;
+    background-color: #f5f5ff;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    z-index: 6;
+    overflow: auto;
+    animation: slice-frame 0.5s;
+}
+
+@keyframes slice-frame {
+    from{
+        right: -100vw;
+    }
+    to{
+        right: 0px;
+    }
+}
+
+#Header-payment {
+    background:#2496FA;
+    background-repeat: repeat;
+    background-size: cover;
+    color: white;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+
+  #Header-payment img{
+      width: 40px;
+      height: 40px;
+      position: absolute;
+      top:10px;
+      left: 10px;
+      z-index: 1;
+  }
+
+ #container-payment #payment-methods-list{
+     position: absolute;
+     top:30px;
+     width: 100%;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+ }
+
+ #payment-methods-list h2{
+     color: white;
+ }
+
+ #payment-methods-list #list-cards{
+     background-color: white;
+     width: 90%;
+     min-height: 130px;
+     margin-top: 30px;
+     border-radius: 15px;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+ }
+
+ #item-payment{
+     display: flex;
+     width: 90%;
+     align-items: center;
+     border-bottom: 1px solid #f5f5ff;
+     margin-top: 5px;
+     margin-bottom: 5px;
+ }
+
+ #item-payment img{
+     width: 60px;
+     height: 60px;
+ }
+
+ #item-payment p{
+     font-weight: bold;
+     font-family: Arial, Helvetica, sans-serif;
+     margin-left: 20px;
+ }
+
+ #payment-container-price{
+    width: 100vw;
+    height: 80px;
+    background-color: white;
+    position: fixed;
+    bottom: 0px;
+    box-shadow: 0px -4px 3px rgba(50, 50, 50, 0.05);
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#addCreditCardContainer{
+    position: fixed;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 7;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#addCreditCardContainer #popup-add{
+    width: 80%;
+    height: 500px;
+    background: white;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 15px;
+}
+
+#popup-add input{
+    width: 85%;
+    height: 30px;
+    background: rgb(214, 214, 214);
+    border: 0px solid white;
+    margin-bottom: 5px;
+}
+
+#short-data{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#short-data input{
+    width: 40%;
+    margin-right: 5px;
+}
+
+#popup-add #button-add{
+    width: 90%;
+    height: 40px;
+    background: #2496FA;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    color: white;
+    margin-top: 10px;
+}
+#close-button{
+    width: 90%;
+    display: flex;
+    margin-top: 10px;
+}
+
+#close-button img{
+    width: 20px;
+    height: 20px;
+}

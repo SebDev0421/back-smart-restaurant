@@ -18,8 +18,8 @@
 }
 
 
-#Header-menu {
-    background:url('../Images/pizza.jpeg');
+#Header-menu-combo {
+    background:url('../Images/combos.jpeg');
     background-repeat: repeat;
     background-size: cover;
     color: white;
@@ -30,7 +30,7 @@
     flex-direction: column;
   }
 
-  #Header-menu #alphaAdd{
+  #Header-menu-combo #alphaAdd{
       background: rgba(0,0,0,0.2);
       display: flex;
       position: relative;
@@ -42,7 +42,7 @@
       justify-content: center;
   }
 
-  #Header-menu img{
+  #Header-menu-combo img{
       width: 40px;
       height: 40px;
       position: absolute;
