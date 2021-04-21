@@ -87,7 +87,7 @@ function App() {
         <h2>Sugeridos del dia</h2>
         <div id ="container-sug">
           <Foodinfo
-          title={"Napolitana"}
+          title={"Pizza Napolitana"}
           price={12000}
           desc = {"Personal 6 porciones"}
         />

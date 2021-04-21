@@ -13,7 +13,7 @@ const Foodinfo = (props)=>{
     return(
         <div id = "container-inf">
             <h3>{props.title}</h3>
-            <img src={pizzaImage}/>
+            <img src={`http://localhost:5000/images/${props.image}`}/>
             <p>{formatter.format(props.price)}</p>
             <p>{props.desc}</p>
             
@@ -22,7 +22,8 @@ const Foodinfo = (props)=>{
                   EventEmitter.emit('addToCart',{
                     title:props.title,
                     price:props.price,
-                    desc:props.desc
+                    desc:props.desc,
+                    image:props.image
                 })
              }}
             >Agregar</button>

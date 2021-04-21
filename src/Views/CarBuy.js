@@ -41,7 +41,7 @@ const CarBuy = (props)=>{
                         return(
                             <div id = "product">
                                 
-                                <img src={pizza_napolitana}/>
+                                <img src={`http://localhost:5000/images/${dataProduct.image}`}/>
                                 
                                 <div>
                                     <p>{dataProduct.title}</p>
@@ -87,6 +87,7 @@ const CarBuy = (props)=>{
             <div id = "car-buy-list">
                 <h2>Carrito</h2>
                 {showItems}
+                <div id="foot"></div>
             </div>
 
         </div>
