@@ -2,6 +2,7 @@ import './Foodinf.css';
 import pizzaImage from '../Images/pizza-napolitana.jpeg'
 
 import EventEmitter from '../Utils/EventEmitter'
+import APIData from '../Utils/APICredentials';
 
 
 const Foodinfo = (props)=>{
@@ -13,7 +14,7 @@ const Foodinfo = (props)=>{
     return(
         <div id = "container-inf">
             <h3>{props.title}</h3>
-            <img src={`http://localhost:5000/images/${props.image}`}/>
+            <img src={`${APIData.URI}images/${props.image}`}/>
             <p>{formatter.format(props.price)}</p>
             <p>{props.desc}</p>
             

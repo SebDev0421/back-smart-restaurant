@@ -1,5 +1,5 @@
 #container-inf{
-    width: 300px;
+    min-width: 300px;
     height: 400px;
     border-radius: 15px;
     display: flex;

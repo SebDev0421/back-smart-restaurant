@@ -49,7 +49,7 @@ const CreditCard = (props)=>{
         }else{
             setImgCard()
         }
-    },[props.number,props.name,props.cvc,props.expiry])
+    },[props.number,props.name,props.ccv,props.expiry])
     
     return(
         <div id = "creditcard-container" style={{background:colorCard}}>

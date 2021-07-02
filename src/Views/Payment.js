@@ -3,18 +3,17 @@ import './Payment.css'
 import Back from '../Icons/back.png'
 
 import creditCard from '../Icons/tarjeta-de-credito.png'
-import visa from '../Icons/visa.png'
-import mastercard from '../Icons/mastercard.png'
-import paypal from '../Icons/paypal.png'
 import money from '../Icons/dinero.png'
 
 import CreditCard from '../Components/CreditCard';
 import close from '../Icons/close.png';
-
+import APIData from '../Utils/APICredentials';
+import { useCookies } from 'react-cookie'
 
 var countDigits = 0;
 var bufferWordNumber = 0
 var numberBuffer = ''
+
 
 const AddCreditCard = (props)=>{
     var [cvc, setCvc] = useState('')
@@ -112,8 +111,15 @@ const AddCreditCard = (props)=>{
                 >
                     <h3>Corregir datos</h3>
                 </div>
-                <div id = "button-add">
-                    <h3>Añadir tarjeta</h3>
+                <div id = "button-add"
+                 onClick = {()=>{
+                     //Connect api payment pasaralla
+                     //get autorization of api for send the order
+                     
+                     props.paymentOrder()
+                 }}
+                >
+                    <h3>Realizar pago</h3>
                 </div>
             </div>
         </div>
@@ -129,6 +135,41 @@ const Payment = (props)=>{
       })
 
     const [addCard, setAddCard] = useState()
+    //cookies save order number
+    const [cookies, setCookie] = useCookies(['codeCash','serial']);
+
+
+    function sendOrder (order,price) {
+        console.log(APIData.URI)
+    
+        fetch(APIData.URI + 'Orders/addOrder',{method:'PUT',body:JSON.stringify({order:order,price:price}),
+       headers:{
+           'Content-Type':'application/json'
+       }
+    })
+                                                           .then(res => res.json())
+                                                           .then((res)=>{console.log(res)})
+                                                           .catch(err=>{if(err) throw err})
+    
+    }
+
+    function sendCash (order,price) {
+        console.log(APIData.URI)
+    
+        fetch(APIData.URI + 'Orders/addCashOrder',{method:'PUT',body:JSON.stringify({order:order,price:price}),
+       headers:{
+           'Content-Type':'application/json'
+       }
+    })
+                                                           .then(res => res.json())
+                                                           .then((res)=>{console.log(res)
+                                                                         setCookie('codeCash',res.code,{path:'/'})
+                                                                         props.openBill(res.code)   
+                                                            })
+                                                           .catch(err=>{if(err) throw err})
+    
+    }
+
 
     return(
         <div id= "container-payment">
@@ -151,21 +192,29 @@ const Payment = (props)=>{
                               back={()=>{
                                   setAddCard()
                               }}
+                              paymentOrder = {()=>{
+                                  //get data card
+                                  sendOrder(props.order,props.totalPrice)
+                              }}
                              />)
                          }}
                     >
                         <img src={creditCard}/>
-                        <p>Agregar tarjeta</p>
+                        <p>tarjeta</p>
                     </div>
-                    <div id = "item-payment">
+                    <div id = "item-payment"
+                      onClick = {()=>{
+                          //connect to api cash
+                          sendCash(props.order,props.totalPrice)
+                      }}
+                    >
                         <img src={money}/>
                         <p>Efectivo</p>
-                    </div>
+                    </div>{/* 
                     <div id = "item-payment">
                         <img src={paypal}/>
                         <p>PayPal</p>
-                    </div>
-
+                    </div> */}
                 </div>
             </div>
             <div id = "payment-container-price">

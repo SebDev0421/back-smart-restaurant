@@ -13,6 +13,7 @@ import combo from './Icons/combo.png'
 
 import PopRegister from './Components/PopRegister';
 import Foodinfo from './Components/Foodinf';
+import PopCash from './Components/PopCash';
 
 import MenuFood from './Views/MenuFood';
 import MenuDrink from './Views/MenuDrink';
@@ -24,8 +25,14 @@ import CarBuy from './Views/CarBuy';
 import Payment from './Views/Payment';
 
 import EventEmitter from './Utils/EventEmitter';
+import APIData from './Utils/APICredentials';
+import { traverseTwoPhase } from 'react-dom/test-utils';
+
+
+const publicIp = require('react-public-ip');
 
 var listShopping = []
+var totalPriceAux = 0
 
 function App() {
 
@@ -37,37 +44,85 @@ function App() {
 
 
   
-  let totalPriceAux = 0
+  
   let [totalPrice, setTotalPrice]= useState(0)
   const [viewPopRegister,setViewRegister] = useState() 
   const [viewMenu,setViewMenu] = useState()
   const [viewCar,setViewCar] = useState()
   const [viewPayment,setViewPayment] = useState()
-  const [sizeList, setSizeList] = useState(0)
-  const [cookies, setCookie] = useCookies(['name']);
+  const [viewCodeCash, setViewCodeCash] = useState()
 
+  const [sizeList, setSizeList] = useState(0)
+  const [cookies, setCookie] = useCookies(['name','codeCash']);
+
+
+  const [listSuggest, setListSuggest] = useState([])
+
+  const getIpPublic = async ()=>{
+    await publicIp.v4()
+                       .then((value)=>{
+                         console.log(value)
+                        })
+  }
   
+
+  const consultCash = (code)=>{
+    fetch(APIData.URI+'Orders/searchCashOrder',{
+      method:'PUT',
+      body:JSON.stringify({code:code}),
+      headers:{
+        'Content-Type':'application/json'
+      }
+    })
+    .then(res => res.json())
+    .then((res)=>{
+      if(res !== null){
+        setViewCodeCash(<PopCash
+          code = {res.code}
+          back = {()=>{
+            setViewCodeCash()
+          }}
+          />)
+      }
+    })
+    .catch(err =>{
+      if(err) throw err
+    })
+  }
 
   useEffect(()=>{
     // read cookies
     // verify name client did register
     // verify if we have a deliverid pending
-    /* EventEmitter.('addToCart',(data)=>{
-      console.log(data)
-    }) */
+    
+    getIpPublic()
     EventEmitter.addListener('addToCart',(data)=>{
-      console.log(data)
       listShopping.push(data)
+      console.log(totalPriceAux)
       totalPriceAux = data.price + totalPriceAux
       
+      
       setTotalPrice(totalPriceAux)
-      console.log(listShopping)
       setSizeList(listShopping.length)
       
     })
     if(cookies.name === undefined){
       setViewRegister(<PopRegister/>)
-    }    
+    }   
+    
+    if(cookies.codeCash === undefined || cookies.codeCash === ""){
+      console.log(cookies.codeCash)
+    }else{
+
+      consultCash(cookies.codeCash)
+      
+    }
+    
+    
+    fetch(APIData.URI + 'foods/showSuggest',{method:'PUT'})
+                                                           .then(res => res.json())
+                                                           .then((res)=>{setListSuggest(res)})
+                                                           .catch(err=>{if(err) throw err})
     
   },[])
 
@@ -77,6 +132,7 @@ function App() {
       {viewMenu}
       {viewCar}
       {viewPayment} 
+      {viewCodeCash}
       <div id = "Header">
         <h1>Bienvenido a Smart Restaurant</h1>
         <h3>Pide desde tu mesa sin pararte</h3>
@@ -86,26 +142,17 @@ function App() {
       <div>
         <h2>Sugeridos del dia</h2>
         <div id ="container-sug">
-          <Foodinfo
-          title={"Pizza Napolitana"}
-          price={12000}
-          desc = {"Personal 6 porciones"}
-        />
-        <Foodinfo
-          title={"Napolitana"}
-          price={12000}
-          desc = {"Personal 6 porciones"}
-        />
-        <Foodinfo
-          title={"Napolitana"}
-          price={12000}
-          desc = {"Personal 6 porciones"}
-        />
-        <Foodinfo
-          title={"Napolitana"}
-          price={12000}
-          desc = {"Personal 6 porciones"}
-        />
+          {listSuggest.map((value)=>{
+            return(
+              <Foodinfo
+            title={value.title}
+            price={parseInt(value.price)}
+            desc = {value.desc}
+            image = {value.image}
+          />
+            )
+              
+          })}
         </div>
       </div>
       <div id = "container-options">
@@ -205,17 +252,43 @@ function App() {
               itemsBuy = {listShopping}
               totalPrice = {totalPrice}
               openPayment = {()=>{
-
+                if(totalPriceAux === 0){
+                  return true
+                }
                 console.log('open payment')
                 setViewPayment(<Payment
-                 totalPrice = {totalPrice}
+                 totalPrice = {totalPriceAux}
+                 order = {listShopping} 
                  back = {(value)=>{
                    setViewPayment()
+                 }}
+                 openBill={(code)=>{
+                  setViewCodeCash(<PopCash
+                    code = {code}
+                    back = {()=>{
+                      setViewCodeCash()
+                    }}
+                    />)
+                    setViewPayment()
+                    setViewCar()
                  }}
                 />)
               }}
               back = {(value)=>{
                 setViewCar()
+              }}
+
+              deleteElement = {(value)=>{
+                
+                
+                listShopping = value.list
+                if(listShopping !== undefined){
+                  setSizeList(listShopping.length)
+                }
+                setTotalPrice(value.newPrice)
+                totalPriceAux = value.newPrice
+                console.log(totalPriceAux)
+                
               }}
              />
            )

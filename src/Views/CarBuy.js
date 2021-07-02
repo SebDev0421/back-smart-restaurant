@@ -1,18 +1,20 @@
 import React ,{useEffect,useState}from 'react';
-import Foodinfo from '../Components/Foodinf'
 import Back from '../Icons/back.png'
 import './CarBuy.css'
 import { useCookies } from 'react-cookie'
-import pizza_napolitana from '../Images/pizza-napolitana.jpeg'
 import shoppingCart from '../Icons/shopping-cart.png'
-
+import cancel from '../Icons/cancel.png'
+import APIData from '../Utils/APICredentials';
 
 
 const CarBuy = (props)=>{
-    const dataArray = [{price:12000,title:"pizza"}]
-
+    var itemsArrayAux = []
     var indexArray = 0;
+    var totalPriceAux = parseInt(props.totalPrice)
 
+    const [listItems, setListItems] = useState([])
+
+    const [priceShow,  setPriceShow] = useState("")
     var formatter = new Intl.NumberFormat('en-US',{
         style: 'currency',
         currency: 'USD',
@@ -26,50 +28,79 @@ const CarBuy = (props)=>{
             </div>
         
     )
-    const back = ()=>{
 
-        return true
-        
-    }
+    const renderList = ()=>{
+        if(itemsArrayAux.length>0){
+        setShowItems(
+            <div id = "shopping-cart">
+                {listItems.map((dataProduct)=>{
+                    indexArray ++;
+                    const saveIndex = indexArray
+                    return(
+                        <div id = "product">
+                            
+                            <img src={`${APIData.URI}images/${dataProduct.image}`}/>
+                            
+                            <div>
+                                <p>{dataProduct.title}</p>
+                                <p>{dataProduct.desc}</p>
+                                <p id="price-text">{formatter.format(dataProduct.price)}</p>
+                            </div>
+                            <div id = "button-delete"
+                              onClick = {()=>{
+                                
+                                
 
-    useEffect(()=>{
-        if(props.sizeList>0){
+                                props.deleteElement(saveIndex)
+                                console.log(saveIndex)
+                                const elementDelete = itemsArrayAux.splice(saveIndex -1,1)
+                                totalPriceAux = totalPriceAux - parseInt(elementDelete[0].price)
+                                setPriceShow(totalPriceAux)
+                                setListItems(itemsArrayAux)
+
+                                setListItems(itemsArrayAux)
+                                props.deleteElement({
+                                    list:itemsArrayAux,
+                                    newPrice: totalPriceAux
+                                })
+                                indexArray = 0
+                                renderList()
+                              }
+                            }
+                            >
+                                <img src = {cancel}/>
+                            </div>
+
+                            
+                        </div>
+                        
+                    )
+                })}
+            </div>
+        )
+        }else{
             setShowItems(
                 <div id = "shopping-cart">
-                    {props.itemsBuy.map((dataProduct)=>{
-                        indexArray ++;
-                        return(
-                            <div id = "product">
-                                
-                                <img src={`http://localhost:5000/images/${dataProduct.image}`}/>
-                                
-                                <div>
-                                    <p>{dataProduct.title}</p>
-                                    <p>{dataProduct.desc}</p>
-                                    <p id="price-text">{formatter.format(dataProduct.price)}</p>
-                                </div>
-
-                                <div id = "payment-container">
-                                        <div>
-                                            <h3>Total a pagar: {formatter.format(props.totalPrice)}</h3>
-                                        </div>
-                                        <div id = "button-payment"
-                                         onClick={()=>{
-                                             props.openPayment()
-                                         }}
-                                        >
-                                            <p>Pagar</p>
-                                        </div>
-                                    
-                                </div>
-                            </div>
-                            
-                        )
-                    })}
+                 <img src = {shoppingCart}/>
+                 <p>No hay nada dentro del carrito</p>
                 </div>
             )
         }
-    },[])
+    }
+
+    useEffect(()=>{
+
+        itemsArrayAux = props.itemsBuy
+        setListItems(props.itemsBuy)
+        
+        setPriceShow(props.totalPrice) 
+
+        
+        renderList()
+        
+
+    },[listItems])
+
     return(
 
 
@@ -88,6 +119,19 @@ const CarBuy = (props)=>{
                 <h2>Carrito</h2>
                 {showItems}
                 <div id="foot"></div>
+                <div id = "payment-container">
+                    
+                    <h3>Total a pagar: {formatter.format(priceShow)}</h3>
+                                        
+                    <div id = "button-payment"
+                    onClick={()=>{
+                        props.openPayment()
+                    }}
+                    >
+                        <p>Pagar</p>
+                    </div>
+                                    
+                </div>
             </div>
 
         </div>
